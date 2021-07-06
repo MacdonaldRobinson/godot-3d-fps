@@ -8,15 +8,15 @@ export var gravity: float = 9.8
 export var jump_power: float = 200
 
 onready var head = $Head
-onready var head_camera = $Head/HeadCamera
-onready var head_ray_cast = $Head/HeadCamera/HeadRayCast
-onready var info = $UI/Info
+onready var head_camera:Camera = $Head/HeadCamera
+onready var head_ray_cast:RayCast = $Head/HeadCamera/HeadRayCast
+onready var info:Label = $UI/Info
 
 var mouse_sensitivity: float = 0.3
 var velocity: Vector3 = Vector3()
 var camera_x_rotation: float = 0
 
-func _ready():
+func _ready():	
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
 func _input(event):
@@ -64,8 +64,12 @@ func _physics_process(delta):
 	velocity = move_and_slide(velocity, Vector3.UP);
 	
 	var head_ray_collider = head_ray_cast.get_collider()
-	
-	if head_ray_collider:
-		print(head_ray_collider.name)
+		
+	if head_ray_collider is Interactable:	
+		info.text = "You can interact with this item using the 'E' key"
+		if Input.is_action_just_pressed("interact"):
+			head_ray_collider.interact()
+	else:
+		info.text = ""
 		
 	

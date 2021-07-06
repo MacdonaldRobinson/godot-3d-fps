@@ -2,16 +2,21 @@ extends KinematicBody
 
 class_name Enemy
 
+onready var detection_ray_cast:RayCast = $DetectionArea/RayCast
 onready var mesh:MeshInstance = $CollisionShape/MeshInstance
 var is_alert: bool = false
 var target = null
 var speed:float = 30
 
+
 func _process(delta):	
-	if target != null:
-		print(target.global_transform.origin)
+	if target != null:		
 		look_at(target.global_transform.origin, Vector3.UP)	
-		move_to_target(delta)	
+		var detection_ray_collider = detection_ray_cast.get_collider()
+		if(detection_ray_collider is Player):			
+			move_to_target(delta)			
+			print("Player detected!", detection_ray_collider)
+			
 		
 func move_to_target(delta):
 	var direction = target.transform.origin - self.transform.origin
